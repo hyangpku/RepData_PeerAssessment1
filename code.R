@@ -1,35 +1,22 @@
----
-title: "PA1_template.Rmd"
-author: "Yang"
-date: "2015.12.20"
-output: html_document
----
-1.Loading and preprocessing the data
-loda the data and process the date
-```{r}
 library("lattice")
+## loda the data and process the date
 setwd("H:\\Users\\hy\\Desktop\\Reproducible Research\\RepData_PeerAssessment1")
 activity <- read.csv("activity.csv", colClasses = c("numeric", "character","numeric"))
 activity$date <- as.Date(activity$date, "%Y-%m-%d")
-```
 
-2.What is mean total number of steps taken per day?
-calculate the mean step per day using aggregating function
-```{r}
+## calculate the mean step per day using aggregating function
 meanstep <- aggregate(steps ~ date, data = activity, sum, na.rm = TRUE)
 hist(meanstep$step,xlab="days",main="mean total number of steps taken per day1",col="grey")
-```
+dev.copy(png,filename="plot1.png")
+dev.off ()
 
-3.What is the average daily activity pattern?
-using tapply calculate the mean step per interval and plot the histogram
-```{r}
+## using tapply calculate the mean step per interval and plot the histogram
 data <- tapply(activity$steps, activity$interval, mean, na.rm = TRUE)
 plot(names(data), data, type = "l", xlab = "interval",ylab = "mean", main = "average daily activity pattern",col = "grey")
-```
-4.Imputing missing values
-count the missing value in the data set
+dev.copy(png,filename="plot2.png")
+dev.off ()
 
-```{r}
+## count the missing value in the data set
 count<- sum(is.na(activity))
 count
 
@@ -50,25 +37,24 @@ for (i in 1:nrow(activity)) {
 new_activity <- activity
 new_activity$steps <- newstep
 
-##plot the new histogram
+## plot the new histogram
 meanstep2 <- aggregate(steps ~ date, data = new_activity, sum)
 hist(meanstep2$step, main = "mean total number of steps taken per day 2", xlab = "day", col = "grey")
+dev.copy(png,filename="plot3.png")
+dev.off ()
 
 mean(meanstep2$steps)
 median(meanstep2$steps)
-```
 
-5.Are there differences in activity patterns between weekdays and weekends?
-add the day label, please pay attention that my computer's language is Chinese so the conditions are 
-expressed in Chinses, otherwise it will not work, so if your computer language is in English, the 
-following code may not run properly. Sorry for the incovenience
-```{r}
+## add the day label, please pay attention that my computer's language is Chinese so the conditions are 
+## expressed in Chinses, otherwise it will not work, so if your computer language is in English, the 
+## following code may not run properly. Sorry for the incovenience
 day <- weekdays(activity$date)
 level <- vector(mode="character")
 for (i in 1:nrow(activity)) {
-  if (day[i] == "ÐÇÆÚÁù") {
+  if (day[i] == "æ˜ŸæœŸå…­") {
     level[i] <- "Weekend"
-  } else if(day[i]=="ÐÇÆÚÌì"){
+  } else if(day[i]=="æ˜ŸæœŸå¤©"){
     level[i]<-"weekend"
   }
   else {
@@ -84,5 +70,5 @@ names(meanstep3) <- c("interval", "level", "steps")
 
 xyplot(steps ~ interval | level, data=meanstep3, type = "l", layout = c(1, 2), 
        xlab = "interval", ylab = "steps")
-```
-
+dev.copy(png,filename="plot4.png")
+dev.off ()
